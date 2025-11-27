@@ -7,6 +7,8 @@ import colorama
 import requests
 import socks
 import socket
+import subprocess
+import threading
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -19,6 +21,75 @@ TOR_PROXY = {
     'https': 'socks5://127.0.0.1:9050'
 }
 
+TOR_PROCESS = None
+
+def start_tor_service():
+    """Start TOR service if not already running"""
+    global TOR_PROCESS
+    try:
+        # Check if TOR is already running
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = test_socket.connect_ex(("127.0.0.1", 9050))
+        test_socket.close()
+        
+        if result == 0:
+            print(Fore.GREEN + "[✓] TOR service already running on port 9050" + Style.RESET_ALL)
+            return True
+        
+        print(Fore.CYAN + "[*] Starting TOR service..." + Style.RESET_ALL)
+        TOR_PROCESS = subprocess.Popen(
+            ["tor", "--SocksPort", "9050"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        
+        # Wait for TOR to start (max 15 seconds)
+        for i in range(15):
+            test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = test_socket.connect_ex(("127.0.0.1", 9050))
+            test_socket.close()
+            
+            if result == 0:
+                time.sleep(2)  # Give TOR extra time to fully initialize
+                print(Fore.GREEN + "[✓] TOR service started successfully" + Style.RESET_ALL)
+                return True
+            
+            time.sleep(1)
+            print(Fore.CYAN + f"[*] Waiting for TOR to start... ({i+1}/15)" + Style.RESET_ALL, end='\r')
+        
+        print(Fore.RED + "\n[-] TOR service startup timeout" + Style.RESET_ALL)
+        return False
+        
+    except FileNotFoundError:
+        print(Fore.RED + "[-] TOR is not installed. Install with: sudo apt-get install tor" + Style.RESET_ALL)
+        return False
+    except Exception as e:
+        print(Fore.RED + f"[-] Error starting TOR: {e}" + Style.RESET_ALL)
+        return False
+
+def check_tor_connection_speed():
+    """Check TOR connection speed"""
+    try:
+        print(Fore.CYAN + "[*] Testing TOR connection speed..." + Style.RESET_ALL)
+        
+        socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+        socket.socket = socks.socksocket
+        
+        start_time = time.time()
+        response = requests.get("http://ipv4.icanhazip.com", timeout=10)
+        elapsed_time = time.time() - start_time
+        
+        if response.status_code == 200:
+            ip_address = response.text.strip()
+            print(Fore.GREEN + f"[✓] TOR connection OK - Speed: {elapsed_time:.2f}s - IP: {ip_address}" + Style.RESET_ALL)
+            return True
+        
+        return False
+        
+    except Exception as e:
+        print(Fore.YELLOW + f"[!] Connection test failed: {str(e)[:50]}" + Style.RESET_ALL)
+        return False
+
 def setup_tor_proxy():
     """Setup TOR SOCKS proxy for anonymous searches"""
     try:
@@ -29,6 +100,20 @@ def setup_tor_proxy():
     except Exception as e:
         print(Fore.RED + f"[-] TOR setup failed: {e}" + Style.RESET_ALL)
         return False
+
+def stop_tor_service():
+    """Stop TOR service gracefully"""
+    global TOR_PROCESS
+    try:
+        if TOR_PROCESS:
+            print(Fore.CYAN + "[*] Stopping TOR service..." + Style.RESET_ALL)
+            TOR_PROCESS.terminate()
+            TOR_PROCESS.wait(timeout=5)
+            print(Fore.GREEN + "[✓] TOR service stopped" + Style.RESET_ALL)
+    except Exception as e:
+        if TOR_PROCESS:
+            TOR_PROCESS.kill()
+        print(Fore.YELLOW + f"[!] Error stopping TOR: {e}" + Style.RESET_ALL)
 
 def loading():
  
@@ -1069,8 +1154,39 @@ def menu():
     exit()
 
 if __name__ == "__main__":
-    # Setup TOR proxy before running the main menu
-    if not setup_tor_proxy():
-        print(Fore.RED + "[!] Warning: TOR proxy setup failed. Continuing without TOR..." + Style.RESET_ALL)
-    
-    menu()
+    try:
+        # Banner
+        print(Fore.GREEN + "\n" + "="*80 + Style.RESET_ALL)
+        print(Fore.CYAN + "[*] BL4CKOPS OSINT - Auto TOR Initialization" + Style.RESET_ALL)
+        print(Fore.GREEN + "="*80 + "\n" + Style.RESET_ALL)
+        
+        # Step 1: Start TOR Service
+        print(Fore.YELLOW + "[STEP 1] Starting TOR Service" + Style.RESET_ALL)
+        if not start_tor_service():
+            print(Fore.RED + "[-] Failed to start TOR service. Exiting..." + Style.RESET_ALL)
+            sys.exit(1)
+        
+        # Step 2: Setup TOR Proxy
+        print(Fore.YELLOW + "\n[STEP 2] Setting up TOR Proxy" + Style.RESET_ALL)
+        if not setup_tor_proxy():
+            print(Fore.RED + "[-] Failed to setup TOR proxy. Exiting..." + Style.RESET_ALL)
+            sys.exit(1)
+        
+        # Step 3: Check Connection Speed
+        print(Fore.YELLOW + "\n[STEP 3] Checking Connection Speed" + Style.RESET_ALL)
+        if not check_tor_connection_speed():
+            print(Fore.YELLOW + "[!] Connection test inconclusive, but continuing..." + Style.RESET_ALL)
+        
+        # All set, run menu
+        print(Fore.GREEN + "\n" + "="*80)
+        print("[✓] TOR initialization complete! Starting BL4CKOPS OSINT...")
+        print("="*80 + "\n" + Style.RESET_ALL)
+        
+        menu()
+        
+    except KeyboardInterrupt:
+        print(Fore.YELLOW + "\n\n[!] Program interrupted by user" + Style.RESET_ALL)
+    except Exception as e:
+        print(Fore.RED + f"\n[-] Unexpected error: {e}" + Style.RESET_ALL)
+    finally:
+        stop_tor_service()
