@@ -27,8 +27,8 @@
 
 **1. Clone & Setup:**
 ```bash
-git clone https://github.com/BLACKOPSH4TIHIT4M/BL4CKOPS_REVEALED.git
-cd BL4CKOPS_REVEALED
+git clone https://github.com/BLACKOPSH4TIHIT4M/BL4CKOPS-OSINT.git
+cd BL4CKOPS_OSINT
 source bin/activate
 pip install -r requirements.txt
 ```
