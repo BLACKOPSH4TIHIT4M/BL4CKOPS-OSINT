@@ -1,4 +1,4 @@
-# BL4CKOPS_REVEALED - OSINT Framework 🕵️
+# BL4CKOPS_OSINT- OSINT Framework 🕵️
 ## Advanced Open Source Intelligence Gathering Tool
 **BL4CKOPS_REVEALED is a comprehensive OSINT framework designed for tactical reconnaissance and intelligence gathering. It provides extensive search capabilities across websites using specialized techniques to discover sensitive files, credentials, API keys, and other valuable information. Powered by Google dork operators and advanced web scraping.**
 ## Exploited vulnerabilities 🏴‍☠️
