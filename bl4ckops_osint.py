@@ -5,11 +5,82 @@ import time
 import lxml
 import colorama
 import requests
+import socks
+import socket
+import subprocess
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 from googlesearch import search
 from colorama import Fore, Back, Style
+
+# TOR Configuration
+TOR_PROCESS = None
+
+def start_tor_service():
+    """Start TOR service if not already running"""
+    global TOR_PROCESS
+    try:
+        # Check if TOR is already running
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = test_socket.connect_ex(("127.0.0.1", 9050))
+        test_socket.close()
+        
+        if result == 0:
+            print(Fore.GREEN + "[✓] TOR service already running on port 9050" + Style.RESET_ALL)
+            return True
+        
+        print(Fore.CYAN + "[*] Starting TOR service..." + Style.RESET_ALL)
+        TOR_PROCESS = subprocess.Popen(
+            ["tor", "--SocksPort", "9050"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        
+        for i in range(15):
+            test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = test_socket.connect_ex(("127.0.0.1", 9050))
+            test_socket.close()
+            
+            if result == 0:
+                time.sleep(2)
+                print(Fore.GREEN + "[✓] TOR service started successfully" + Style.RESET_ALL)
+                return True
+            
+            time.sleep(1)
+            print(Fore.CYAN + f"[*] Waiting for TOR... ({i+1}/15)" + Style.RESET_ALL, end='\r')
+        
+        print(Fore.RED + "\n[-] TOR startup timeout" + Style.RESET_ALL)
+        return False
+        
+    except FileNotFoundError:
+        print(Fore.RED + "[-] TOR not installed: sudo apt-get install tor" + Style.RESET_ALL)
+        return False
+    except Exception as e:
+        print(Fore.RED + f"[-] Error: {e}" + Style.RESET_ALL)
+        return False
+
+def setup_tor_proxy():
+    """Setup TOR SOCKS proxy"""
+    try:
+        socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+        socket.socket = socks.socksocket
+        print(Fore.YELLOW + "[*] TOR proxy configured" + Style.RESET_ALL)
+        return True
+    except Exception as e:
+        print(Fore.RED + f"[-] TOR setup failed: {e}" + Style.RESET_ALL)
+        return False
+
+def stop_tor_service():
+    """Stop TOR service"""
+    global TOR_PROCESS
+    try:
+        if TOR_PROCESS:
+            TOR_PROCESS.terminate()
+            TOR_PROCESS.wait(timeout=5)
+    except:
+        if TOR_PROCESS:
+            TOR_PROCESS.kill()
 
 def loading():
  
@@ -38,7 +109,7 @@ def leeker():
    loading()
    data = "filetype:xls username password email"
    print("===============================================================================")
-   for j in search(data, tld="co.in", num=10, stop=10, pause=2):
+   for j in search(data, pause=2):
      print(j)
    print("===============================================================================\n")
    print("[*] All cookies scrapped\n")
@@ -51,7 +122,7 @@ def leeker():
    loading()
    data2 = "intext:" + "'" + "Index of /" + "'" + "+password.txt"
    print("===============================================================================")
-   for j in search(data2, tld="co.in", num=10, stop=10, pause=2):
+   for j in search(data2, pause=2):
      print(j)
    print("===============================================================================\n")
    print("[*] All apache passwords scrapped\n")
@@ -64,7 +135,7 @@ def leeker():
    loading()
    data3 = "filetype:sql user password"
    print("===============================================================================")
-   for j in search(data3, tld="co.in", num=10, stop=10, pause=2):
+   for j in search(data3, pause=2):
      print(j)
    print("===============================================================================\n")
    print("[*] All sql user passwords scrapped\n")
@@ -77,7 +148,7 @@ def leeker():
    loading()
    data4 = "intitle:" + "'" + "index of" + "'" + " intext:" + "apikey.txt"
    print("===============================================================================")
-   for j in search(data4, tld="co.in", num=10, stop=10, pause=2):
+   for j in search(data4, pause=2):
       print(j)
    print("===============================================================================\n")
    print("[*] All api keys scrapped\n")
@@ -89,7 +160,7 @@ def leeker():
    loading()
    data5 = "intitle:" "'" + "index of " + "'" + "intext:" + "'" + "cookies.txt" + "'"
    print("===============================================================================")
-   for j in search(data5, tld="co.in", num=10, stop=10, pause=2):
+   for j in search(data5, pause=2):
       print(j)
    print("===============================================================================\n")
    print("[*] All cookies scrapped\n")
@@ -107,133 +178,133 @@ def files():
  loading()
  data = "site:" + target + ".com " + "filetype:pdf"
  print("===============================================================================")
- for j in search(data, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(txt): " + "[" + target + ".com" + "]\n")
  loading()
  data2 = "site:" + target + ".com " + "filetype:txt"
  print("===============================================================================")
- for j in search(data2, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data2, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(doc): " + "[" + target + ".com" + "]\n")
  loading()
  data3 = "site:" + target + ".com " + "filetype:doc"
  print("===============================================================================")
- for j in search(data3, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data3, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(docx): " + "[" + target + ".com" + "]\n")
  loading()
  data4 = "site:" + target + ".com " + "filetype:docx"
  print("===============================================================================")
- for j in search(data4, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data4, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(xls): " + "[" + target + ".com" + "]\n")
  loading()
  data5 = "site:" + target + ".com " + "filetype:xls"
  print("===============================================================================")
- for j in search(data5, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data5, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(xlsx): " + "[" + target + ".com" + "]\n")
  loading()
  data6 = "site:" + target + ".com " + "filetype:xlsx"
  print("===============================================================================")
- for j in search(data6, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data6, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(ppt): " + "[" + target + ".com" + "]\n")
  loading()
  data7 = "site:" + target + ".com " + "filetype:ppt"
  print("===============================================================================")
- for j in search(data7, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data7, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(htm): " + "[" + target + ".com" + "]\n")
  loading()
  data8 = "site:" + target + ".com " + "filetype:htm"
  print("===============================================================================")
- for j in search(data8, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data8, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(html): " + "[" + target + ".com" + "]\n")
  loading()
  data9 = "site:" + target + ".com " + "filetype:html"
  print("===============================================================================")
- for j in search(data9, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data9, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(zip): " + "[" + target + ".com" + "]\n")
  loading()
  data10 = "site:" + target + ".com " + "filetype:zip"
  print("===============================================================================")
- for j in search(data10, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data10, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(tar): " + "[" + target + ".com" + "]\n")
  loading()
  data11= "site:" + target + ".com " + "filetype:tar"
  print("===============================================================================")
- for j in search(data11, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data11, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(flv): " + "[" + target + ".com" + "]\n")
  loading()
  data12 = "site:" + target + ".com " + "filetype:flv"
  print("===============================================================================")
- for j in search(data12, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data12, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp4): " + "[" + target + ".com" + "]\n")
  loading()
  data13 = "site:" + target + ".com " + "filetype:mp4"
  print("===============================================================================")
- for j in search(data13, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data13, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(jpg): " + "[" + target + ".com" + "]\n")
  loading()
  data14 = "site:" + target + ".com " + "filetype:jpg"
  print("===============================================================================")
- for j in search(data14, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data14, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(png): " + "[" + target + ".com" + "]\n")
  loading()
  data15 = "site:" + target + ".com " + "filetype:png"
  print("===============================================================================")
- for j in search(data15, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data15, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp3): " + "[" + target + ".com" + "]\n")
  loading()
  data16 = "site:" + target + ".com " + "filetype:mp3"
  print("===============================================================================")
- for j in search(data16, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data16, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp4): " + "[" + target + ".com" + "]\n")
  loading()
  data17 = "site:" + target + ".com " + "filetype:mp4"
  print("===============================================================================")
- for j in search(data17, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data17, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(gz): " + "[" + target + ".com" + "]\n")
  loading()
  data18 = "site:" + target + ".com " + "filetype:gz"
  print("===============================================================================")
- for j in search(data18, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data18, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(bz2): " + "[" + target + ".com" + "]\n")
  loading()
  data19 = "site:" + target + ".com " + "filetype:bz2"
  print("===============================================================================")
- for j in search(data19, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data19, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All file types scrapped\n")
@@ -252,7 +323,7 @@ def numbers():
  loading()
  data20 = "site:" + target + ".com " + "intext:Whatsapp " + number
  print("===============================================================================")
- for j in search(data20, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data20, pause=2):
     print(j)
  print("===============================================================================\n")
  print("[*] All phone numbers scrapped\n")
@@ -270,63 +341,63 @@ def mails():
  loading()
  data21 = "site:" + target + ".com " + "intext:@gmail"
  print("===============================================================================")
- for j in search(data21, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data21, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@gmail.com): " + "[" + target + ".com" + "]\n")
  loading()
  data22 = "site:" + target + ".com " + "intext:@gmail"
  print("===============================================================================")
- for j in search(data22, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data22, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@hotmail.com): " + "[" + target + ".com" + "]\n")
  loading()
  data23 = "site:" + target + ".com " + "intext:@hotmail.com"
  print("===============================================================================")
- for j in search(data23, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data23, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@yandex.com): " + "[" + target + ".com" + "]\n")
  loading()
  data24 = "site:" + target + ".com " + "intext:@yandex.com"
  print("===============================================================================")
- for j in search(data24, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data24, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@yahoo.com): " + "[" + target + ".com" + "]\n")
  loading()
  data25 = "site:" + target + ".com " + "intext:@yahoo.com"
  print("===============================================================================")
- for j in search(data25, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data25, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@gmx.com): " + "[" + target + ".com" + "]\n")
  loading()
  data26 = "site:" + target + ".com " + "intext:@gmx.com"
  print("===============================================================================")
- for j in search(data26, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data26, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@zoho.com): " + "[" + target + ".com" + "]\n")
  loading()
  data27 = "site:" + target + ".com " + "intext:@zoho.com"
  print("===============================================================================")
- for j in search(data27, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data27, pause=2):
    print(j) 
  print("===============================================================================\n") 
  print("[*] Scrapping mails(example@aol.com): " + "[" + target + ".com" + "]\n")
  loading()
  data28 = "site:" + target + ".com " + "intext:@aol.com"
  print("===============================================================================")
- for j in search(data28, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data28, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@email.com): " + "[" + target + ".com" + "]\n")
  loading()
  data29 = "site:" + target + ".com " + "intext:@email.com"
  print("===============================================================================")
- for j in search(data29, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data29, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All mails scrapped\n")
@@ -344,77 +415,77 @@ def pages():
  loading()
  data30 = "site:" + target + " intext:blog"
  print("===============================================================================")
- for j in search(data30, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data30, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping security pages: " + "[" + target + ".com" + "]\n")
  loading()
  data31 = "site:" + target + " intext:security"
  print("===============================================================================")
- for j in search(data31, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data31, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping complaint pages: " + "[" + target + ".com" + "]\n")
  loading()
  data32 = "site:" + target + " intext:complaint"
  print("===============================================================================")
- for j in search(data32, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data32, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping document pages: " + "[" + target + ".com" + "]\n")
  loading()
  data33 = "site:" + target + " intext:documents"
  print("===============================================================================")
- for j in search(data33, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data33, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping punishment pages: " + "[" + target + ".com" + "]\n")
  loading()
  data34 = "site:" + target + " intext:punishment"
  print("===============================================================================")
- for j in search(data34, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data34, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping database pages: " + "[" + target + ".com" + "]\n")
  loading()
  data35 = "site:" + target + " intext:database"
  print("===============================================================================")
- for j in search(data35, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data35, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping state pages: " + "[" + target + ".com" + "]\n")
  loading()
  data36 = "site:" + target + " intext:state"
  print("===============================================================================")
- for j in search(data36, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data36, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping hospital pages: " + "[" + target + ".com" + "]\n")
  loading()
  data37 = "site:" + target + " intext:hospital"
  print("===============================================================================")
- for j in search(data37, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data37, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping school pages: " + "[" + target + ".com" + "]\n")
  loading()
  data38 = "site:" + target + " intext:school"
  print("===============================================================================")
- for j in search(data38, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data38, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping airport pages: " + "[" + target + ".com" + "]\n")
  loading()
  data39 = "site:" + target + " intext:airport"
  print("===============================================================================")
- for j in search(data39, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data39, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping railway pages: " + "[" + target + ".com" + "]\n")
  loading()
  data40 = "site:" + target + " intext:railway"
  print("===============================================================================")
- for j in search(data40, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data40, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All pages scrapped\n")
@@ -433,21 +504,21 @@ def other():
  loading()
  data41 = "related:" + target +".com"
  print("===============================================================================")
- for j in search(data41, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data41, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping links: " + "[" + target + ".com" + "]\n")
  loading()
  data42 = "link:" + target +".com"
  print("===============================================================================")
- for j in search(data42, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data42, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping info page: " + "[" + target + ".com" + "]\n")
  loading()
  data43 = "info:" + target +".com"
  print("===============================================================================")
- for j in search(data42, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data42, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping user info\n")
@@ -456,7 +527,7 @@ def other():
  loading()
  data44 = user + "intext:"+target
  print("===============================================================================")
- for j in search(data42, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data42, pause=2):
    print(j)
  print("===============================================================================\n")  
  print("[*] All other scrapping complated\n")
@@ -470,28 +541,28 @@ def password():
  loading()
  data41 = "site" + target +".com filetype:password" 
  print("===============================================================================")
- for j in search(data41, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data41, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping passwords[2]: " + "[" + target + ".com" + "]\n")
  loading()
  data42 = "site" + target +".com filetype:passwords" 
  print("===============================================================================")
- for j in search(data42, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data42, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping passwords[3]: " + "[" + target + ".com" + "]\n")
  loading()
  data43 = "site" + target +".com inurl:/etc/passwd" 
  print("===============================================================================")
- for j in search(data43, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data43, pause=2):
    print(j)
  print("===============================================================================\n") 
  print("[*] Scrapping passwords[4]: " + "[" + target + ".com" + "]\n")
  loading()
  data44 = "site" + target +".com filetype:log.txt" 
  print("===============================================================================")
- for j in search(data44, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data44, pause=2):
    print(j)
  print("===============================================================================\n") 
  print("[*] All passwords scrapped\n")
@@ -535,133 +606,133 @@ def full_scrapper():
  loading()
  data = "site:" + target + ".com " + "filetype:pdf"
  print("===============================================================================")
- for j in search(data, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(txt): " + "[" + target + ".com" + "]\n")
  loading()
  data2 = "site:" + target + ".com " + "filetype:txt"
  print("===============================================================================")
- for j in search(data2, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data2, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(doc): " + "[" + target + ".com" + "]\n")
  loading()
  data3 = "site:" + target + ".com " + "filetype:doc"
  print("===============================================================================")
- for j in search(data3, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data3, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(docx): " + "[" + target + ".com" + "]\n")
  loading()
  data4 = "site:" + target + ".com " + "filetype:docx"
  print("===============================================================================")
- for j in search(data4, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data4, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(xls): " + "[" + target + ".com" + "]\n")
  loading()
  data5 = "site:" + target + ".com " + "filetype:xls"
  print("===============================================================================")
- for j in search(data5, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data5, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(xlsx): " + "[" + target + ".com" + "]\n")
  loading()
  data6 = "site:" + target + ".com " + "filetype:xlsx"
  print("===============================================================================")
- for j in search(data6, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data6, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(ppt): " + "[" + target + ".com" + "]\n")
  loading()
  data7 = "site:" + target + ".com " + "filetype:ppt"
  print("===============================================================================")
- for j in search(data7, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data7, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(htm): " + "[" + target + ".com" + "]\n")
  loading()
  data8 = "site:" + target + ".com " + "filetype:htm"
  print("===============================================================================")
- for j in search(data8, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data8, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(html): " + "[" + target + ".com" + "]\n")
  loading()
  data9 = "site:" + target + ".com " + "filetype:html"
  print("===============================================================================")
- for j in search(data9, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data9, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(zip): " + "[" + target + ".com" + "]\n")
  loading()
  data10 = "site:" + target + ".com " + "filetype:zip"
  print("===============================================================================")
- for j in search(data10, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data10, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(tar): " + "[" + target + ".com" + "]\n")
  loading()
  data11= "site:" + target + ".com " + "filetype:tar"
  print("===============================================================================")
- for j in search(data11, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data11, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(flv): " + "[" + target + ".com" + "]\n")
  loading()
  data12 = "site:" + target + ".com " + "filetype:flv"
  print("===============================================================================")
- for j in search(data12, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data12, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp4): " + "[" + target + ".com" + "]\n")
  loading()
  data13 = "site:" + target + ".com " + "filetype:mp4"
  print("===============================================================================")
- for j in search(data13, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data13, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(jpg): " + "[" + target + ".com" + "]\n")
  loading()
  data14 = "site:" + target + ".com " + "filetype:jpg"
  print("===============================================================================")
- for j in search(data14, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data14, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(png): " + "[" + target + ".com" + "]\n")
  loading()
  data15 = "site:" + target + ".com " + "filetype:png"
  print("===============================================================================")
- for j in search(data15, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data15, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp3): " + "[" + target + ".com" + "]\n")
  loading()
  data16 = "site:" + target + ".com " + "filetype:mp3"
  print("===============================================================================")
- for j in search(data16, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data16, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(mp4): " + "[" + target + ".com" + "]\n")
  loading()
  data17 = "site:" + target + ".com " + "filetype:mp4"
  print("===============================================================================")
- for j in search(data17, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data17, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(gz): " + "[" + target + ".com" + "]\n")
  loading()
  data18 = "site:" + target + ".com " + "filetype:gz"
  print("===============================================================================")
- for j in search(data18, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data18, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping files(bz2): " + "[" + target + ".com" + "]\n")
  loading()
  data19 = "site:" + target + ".com " + "filetype:bz2"
  print("===============================================================================")
- for j in search(data19, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data19, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All file types scrapped\n")
@@ -673,7 +744,7 @@ def full_scrapper():
  loading()
  data20 = "site:" + target + ".com " + "intext:Whatsapp " + number
  print("===============================================================================")
- for j in search(data20, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data20, pause=2):
     print(j)
  print("===============================================================================\n")
  print("[*] All phone numbers scrapped\n")
@@ -682,63 +753,63 @@ def full_scrapper():
  loading()
  data21 = "site:" + target + ".com " + "intext:@gmail"
  print("===============================================================================")
- for j in search(data21, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data21, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@gmail.com): " + "[" + target + ".com" + "]\n")
  loading()
  data22 = "site:" + target + ".com " + "intext:@gmail"
  print("===============================================================================")
- for j in search(data22, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data22, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@hotmail.com): " + "[" + target + ".com" + "]\n")
  loading()
  data23 = "site:" + target + ".com " + "intext:@hotmail.com"
  print("===============================================================================")
- for j in search(data23, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data23, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@yandex.com): " + "[" + target + ".com" + "]\n")
  loading()
  data24 = "site:" + target + ".com " + "intext:@yandex.com"
  print("===============================================================================")
- for j in search(data24, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data24, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@yahoo.com): " + "[" + target + ".com" + "]\n")
  loading()
  data25 = "site:" + target + ".com " + "intext:@yahoo.com"
  print("===============================================================================")
- for j in search(data25, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data25, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@gmx.com): " + "[" + target + ".com" + "]\n")
  loading()
  data26 = "site:" + target + ".com " + "intext:@gmx.com"
  print("===============================================================================")
- for j in search(data26, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data26, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@zoho.com): " + "[" + target + ".com" + "]\n")
  loading()
  data27 = "site:" + target + ".com " + "intext:@zoho.com"
  print("===============================================================================")
- for j in search(data27, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data27, pause=2):
    print(j) 
  print("===============================================================================\n") 
  print("[*] Scrapping mails(example@aol.com): " + "[" + target + ".com" + "]\n")
  loading()
  data28 = "site:" + target + ".com " + "intext:@aol.com"
  print("===============================================================================")
- for j in search(data28, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data28, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping mails(example@email.com): " + "[" + target + ".com" + "]\n")
  loading()
  data29 = "site:" + target + ".com " + "intext:@email.com"
  print("===============================================================================")
- for j in search(data29, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data29, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All mails scrapped\n")
@@ -749,77 +820,77 @@ def full_scrapper():
  loading()
  data30 = "site:" + target + " intext:blog"
  print("===============================================================================")
- for j in search(data30, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data30, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping security pages: " + "[" + target + ".com" + "]\n")
  loading()
  data31 = "site:" + target + " intext:security"
  print("===============================================================================")
- for j in search(data31, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data31, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping complaint pages: " + "[" + target + ".com" + "]\n")
  loading()
  data32 = "site:" + target + " intext:complaint"
  print("===============================================================================")
- for j in search(data32, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data32, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping document pages: " + "[" + target + ".com" + "]\n")
  loading()
  data33 = "site:" + target + " intext:documents"
  print("===============================================================================")
- for j in search(data33, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data33, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping punishment pages: " + "[" + target + ".com" + "]\n")
  loading()
  data34 = "site:" + target + " intext:punishment"
  print("===============================================================================")
- for j in search(data34, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data34, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping database pages: " + "[" + target + ".com" + "]\n")
  loading()
  data35 = "site:" + target + " intext:database"
  print("===============================================================================")
- for j in search(data35, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data35, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping state pages: " + "[" + target + ".com" + "]\n")
  loading()
  data36 = "site:" + target + " intext:state"
  print("===============================================================================")
- for j in search(data36, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data36, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping hospital pages: " + "[" + target + ".com" + "]\n")
  loading()
  data37 = "site:" + target + " intext:hospital"
  print("===============================================================================")
- for j in search(data37, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data37, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping school pages: " + "[" + target + ".com" + "]\n")
  loading()
  data38 = "site:" + target + " intext:school"
  print("===============================================================================")
- for j in search(data38, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data38, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping airport pages: " + "[" + target + ".com" + "]\n")
  loading()
  data39 = "site:" + target + " intext:airport"
  print("===============================================================================")
- for j in search(data39, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data39, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping railway pages: " + "[" + target + ".com" + "]\n")
  loading()
  data40 = "site:" + target + " intext:railway"
  print("===============================================================================")
- for j in search(data40, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data40, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] All pages scrapped\n")
@@ -830,21 +901,21 @@ def full_scrapper():
  loading()
  data41 = "related:" + target +".com"
  print("===============================================================================")
- for j in search(data41, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data41, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping links: " + "[" + target + ".com" + "]\n")
  loading()
  data42 = "link:" + target +".com"
  print("===============================================================================")
- for j in search(data42, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data42, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping info page: " + "[" + target + ".com" + "]\n")
  loading()
  data43 = "info:" + target +".com"
  print("===============================================================================")
- for j in search(data43, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data43, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping user info\n")
@@ -853,7 +924,7 @@ def full_scrapper():
  loading()
  data44 = user + "intext:"+target
  print("===============================================================================")
- for j in search(data44, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data44, pause=2):
    print(j)
  print("===============================================================================\n")  
  enter = input("[*] Do you want to progress further? just press enter... ")
@@ -862,28 +933,28 @@ def full_scrapper():
  loading()
  data45 = "site" + target +".com filetype:password" 
  print("===============================================================================")
- for j in search(data45, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data45, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping passwords[2]: " + "[" + target + ".com" + "]\n")
  loading()
  data46 = "site" + target +".com filetype:passwords" 
  print("===============================================================================")
- for j in search(data46, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data46, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Scrapping passwords[3]: " + "[" + target + ".com" + "]\n")
  loading()
  data47 = "site" + target +".com inurl:/etc/passwd" 
  print("===============================================================================")
- for j in search(data47, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data47, pause=2):
    print(j)
  print("===============================================================================\n") 
  print("[*] Scrapping passwords[4]: " + "[" + target + ".com" + "]\n")
  loading()
  data48 = "site" + target +".com filetype:log.txt" 
  print("===============================================================================")
- for j in search(data48, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data48, pause=2):
    print(j)
  print("===============================================================================\n") 
  print("[*] All processing complated\n")
@@ -922,7 +993,7 @@ def other_mode():
  print("\n..:: OTHER MODE ::..\n") 
  search = input("[*] Enter dork: ")
  print("\n===============================================================================") 
- for j in search(search, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(search, pause=2):
      print(j)
  print("===============================================================================\n") 
  print("[*] Dork scrapping complated\n")
@@ -938,42 +1009,42 @@ def person():
  print("\n[*] Search name[1]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_name, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_name, pause=2):
    print(j)
  print("===============================================================================\n")
  data_surname = "intext: " + name + " " + sur
  print("[*] Search name and surname[2]: " + "[" + name + "]" + "[" + sur + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_surname, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_surname, pause=2):
    print(j)
  print("===============================================================================\n")
  data_phone = "intext: " + phone
  print("[*] Search phone number[3]: " + "[" + phone + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_phone, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_phone, pause=2):
    print(j)
  print("===============================================================================\n")
  data_instagram = "site: instagram.com intext: " + name
  print("[*] Search social account [instagram][4]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_instagram, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_instagram, pause=2):
    print(j)
  print("===============================================================================\n")
  data_facebook = "site: facebook.com intext: " + name
  print("[*] Search social account [facebook][5]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_facebook, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_facebook, pause=2):
    print(j)
  print("===============================================================================\n")
  data_twitter = "site: twitter.com intext: " + name
  print("[*] Search social account [twitter][6]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_instagram, tld="co.in", num=10, stop=10, pause=2):
+ for j in search(data_instagram, pause=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Person scrapping complated\n")
@@ -1050,7 +1121,16 @@ def menu():
     exit()
 
 if __name__ == "__main__":
-    menu()
-    
-   
-    
+    try:
+        print(Fore.CYAN + "\n[*] Initializing TOR..." + Style.RESET_ALL)
+        if not start_tor_service():
+            print(Fore.YELLOW + "[!] Warning: TOR not available, continuing..." + Style.RESET_ALL)
+        else:
+            if not setup_tor_proxy():
+                print(Fore.YELLOW + "[!] Warning: TOR proxy setup failed..." + Style.RESET_ALL)
+        
+        menu()
+    except KeyboardInterrupt:
+        print(Fore.YELLOW + "\n[!] Interrupted" + Style.RESET_ALL)
+    finally:
+        stop_tor_service()
