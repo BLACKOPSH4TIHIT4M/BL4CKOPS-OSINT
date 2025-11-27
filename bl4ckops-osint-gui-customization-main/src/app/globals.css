@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.375rem;
+  --background: 10 10 10;
+  --foreground: 0 255 65;
+  --card: 15 15 15;
+  --card-foreground: 0 255 65;
+  --popover: 15 15 15;
+  --popover-foreground: 0 255 65;
+  --primary: 0 255 65;
+  --primary-foreground: 10 10 10;
+  --secondary: 20 20 20;
+  --secondary-foreground: 0 255 65;
+  --muted: 25 25 25;
+  --muted-foreground: 0 180 45;
+  --accent: 0 255 65;
+  --accent-foreground: 10 10 10;
+  --destructive: 255 50 50;
+  --border: 0 255 65;
+  --input: 20 20 20;
+  --ring: 0 255 65;
+  --chart-1: 0 255 65;
+  --chart-2: 50 200 50;
+  --chart-3: 100 150 50;
+  --chart-4: 150 100 50;
+  --chart-5: 200 50 50;
+  --sidebar: 15 15 15;
+  --sidebar-foreground: 0 255 65;
+  --sidebar-primary: 0 255 65;
+  --sidebar-primary-foreground: 10 10 10;
+  --sidebar-accent: 20 20 20;
+  --sidebar-accent-foreground: 0 255 65;
+  --sidebar-border: 0 255 65;
+  --sidebar-ring: 0 255 65;
+}
+
+.dark {
+  --background: 10 10 10;
+  --foreground: 0 255 65;
+  --card: 15 15 15;
+  --card-foreground: 0 255 65;
+  --popover: 15 15 15;
+  --popover-foreground: 0 255 65;
+  --primary: 0 255 65;
+  --primary-foreground: 10 10 10;
+  --secondary: 20 20 20;
+  --secondary-foreground: 0 255 65;
+  --muted: 25 25 25;
+  --muted-foreground: 0 180 45;
+  --accent: 0 255 65;
+  --accent-foreground: 10 10 10;
+  --destructive: 255 50 50;
+  --border: 0 255 65;
+  --input: 20 20 20;
+  --ring: 0 255 65;
+  --chart-1: 0 255 65;
+  --chart-2: 50 200 50;
+  --chart-3: 100 150 50;
+  --chart-4: 150 100 50;
+  --chart-5: 200 50 50;
+  --sidebar: 15 15 15;
+  --sidebar-foreground: 0 255 65;
+  --sidebar-primary: 0 255 65;
+  --sidebar-primary-foreground: 10 10 10;
+  --sidebar-accent: 20 20 20;
+  --sidebar-accent-foreground: 0 255 65;
+  --sidebar-border: 0 255 65;
+  --sidebar-ring: 0 255 65;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))];
+    font-family: 'Share Tech Mono', monospace;
+  }
+  
+  .terminal-text {
+    font-family: 'Share Tech Mono', monospace;
+    color: rgb(0, 255, 65);
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+  }
+  
+  .tactical-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3), 0 0 20px rgba(0, 255, 65, 0.2);
+  }
+  
+  .glow-green-text {
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.4);
+  }
+
+  @keyframes scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+  }
+}
+
+/* Hide Next.js error overlay portal */
+nextjs-portal {
+  display: none !important;
+}

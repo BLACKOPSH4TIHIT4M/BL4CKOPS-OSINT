@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.next/
+build/
+dist/
+venv/
+env/
+bin/
+lib/
+lib64
+include/
+
+# Node
+npm-debug.log*
+yarn-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Large files
+*.pack
+*.node
