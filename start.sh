@@ -1,53 +1,60 @@
 #!/bin/bash
-# BL4CKOPS OSINT - Start All Services Script
-# Usage: chmod +x start.sh && ./start.sh
+# BL4CKOPS OSINT - Auto TOR Startup Script
 
-set -e
-
-echo "╔════════════════════════════════════════════════════════════╗"
-echo "║   BL4CKOPS OSINT - Starting All Services                   ║"
-echo "╚════════════════════════════════════════════════════════════╝"
+echo "=================================="
+echo "BL4CKOPS OSINT - TOR Auto Setup"
+echo "=================================="
 echo ""
 
-# Kill any existing processes
-echo "[1/4] Cleaning up old processes..."
-pkill -f "uvicorn\|next dev" 2>/dev/null || true
-sleep 2
-
-# Start Backend
-echo "[2/4] Starting Backend (port 8000)..."
-cd /home/h4tihit4m/BL4CKOPS_REVEALED
-source bin/activate
-nohup uvicorn backend.api:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
-sleep 3
-echo "✓ Backend ready at http://127.0.0.1:8000"
-
-# Start Frontend
-echo "[3/4] Starting Frontend (port 3000)..."
-cd /home/h4tihit4m/Downloads/bl4ckops-osint-gui-customization-main
-npm run dev > frontend.log 2>&1 &
-sleep 5
-echo "✓ Frontend ready at http://localhost:3000"
-
-# Start Tor (optional)
-echo "[4/4] Checking Tor..."
-if sudo systemctl is-active --quiet tor; then
-    echo "✓ Tor already running on 127.0.0.1:9050"
-elif ps aux | grep -q "[t]or "; then
-    echo "✓ Tor daemon already running"
+# Check if TOR is already running
+echo "[*] Checking TOR service..."
+if command -v nc &> /dev/null; then
+    if nc -z 127.0.0.1 9050 2>/dev/null; then
+        echo "[✓] TOR already running on port 9050"
+    else
+        echo "[*] Starting TOR service..."
+        tor --SocksPort 9050 --RunAsDaemon 1
+        
+        # Wait for TOR to start
+        for i in {1..20}; do
+            if nc -z 127.0.0.1 9050 2>/dev/null; then
+                echo "[✓] TOR service started successfully"
+                break
+            fi
+            echo "[*] Waiting for TOR... ($i/20)"
+            sleep 1
+        done
+    fi
+elif command -v timeout &> /dev/null; then
+    # Alternative check using timeout and exec
+    if timeout 1 bash -c "cat < /dev/null > /dev/tcp/127.0.0.1/9050" 2>/dev/null; then
+        echo "[✓] TOR already running on port 9050"
+    else
+        echo "[*] Starting TOR service..."
+        tor --SocksPort 9050 --RunAsDaemon 1
+        sleep 5
+        echo "[✓] TOR service started"
+    fi
 else
-    echo "⚠ Tor not running (optional for browser use)"
+    echo "[!] Warning: Cannot check TOR status reliably"
+    echo "[*] Attempting to start TOR service..."
+    tor --SocksPort 9050 --RunAsDaemon 1
+    sleep 5
 fi
 
 echo ""
-echo "╔════════════════════════════════════════════════════════════╗"
-echo "║                  ✅ ALL SERVICES READY                     ║"
-echo "╠════════════════════════════════════════════════════════════╣"
-echo "║  Backend:      http://127.0.0.1:8000/health                ║"
-echo "║  Frontend:     http://localhost:3000                       ║"
-echo "║  Frontend LAN: http://192.168.1.9:3000                    ║"
-echo "║  Tor Proxy:    127.0.0.1:9050 (browser only, optional)    ║"
-echo "╠════════════════════════════════════════════════════════════╣"
+echo "[*] Starting BL4CKOPS OSINT..."
+echo ""
+
+# Run Python script
+cd /home/h4tihit4m/BL4CKOPS_REVEALED
+python bl4ckops_osint.py
+
+# Cleanup
+echo ""
+echo "[*] Stopping TOR service..."
+pkill -f "tor --SocksPort" 2>/dev/null || true
+echo "[✓] Done"
 echo "║  Docs:  SETUP_COMPLETE.md  |  TOR_BROWSER_SETUP.md         ║"
 echo "║  Logs:  backend.log        |  frontend.log                 ║"
 echo "╚════════════════════════════════════════════════════════════╝"
