@@ -18,6 +18,7 @@ yarn-debug.log*
 __pycache__/
 *.pyc
 *.egg-info/
+amera.py
 
 # Large files
 *.pack

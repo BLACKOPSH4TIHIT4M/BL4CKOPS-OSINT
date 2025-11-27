@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Amera.py Code Analyzer
-Tool untuk menganalisis dan breakdown file amera.py
+BL4CKOPS_REVEALED Code Analyzer
+Tool untuk menganalisis dan breakdown file bl4ckops_osint.py
 """
 
 import re
@@ -9,8 +9,8 @@ import ast
 from pathlib import Path
 from typing import Dict, List, Set
 
-class AmeraAnalyzer:
-    """Analyze Amera.py Google Dorking tool"""
+class BL4CKOPSAnalyzer:
+    """Analyze BL4CKOPS_REVEALED Google Dorking tool"""
     
     def __init__(self, file_path: str):
         self.file_path = Path(file_path)
@@ -157,7 +157,7 @@ class AmeraAnalyzer:
     def generate_report(self):
         """Generate comprehensive analysis report"""
         print("="*70)
-        print("AMERA.PY ANALYSIS REPORT")
+        print("BL4CKOPS_REVEALED ANALYSIS REPORT")
         print("="*70)
         
         # Imports
@@ -225,11 +225,11 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description='Amera.py Code Analyzer',
+        description='BL4CKOPS_REVEALED Code Analyzer',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
-    parser.add_argument('file', help='Path to amera.py file')
+    parser.add_argument('file', help='Path to bl4ckops_osint.py file')
     
     args = parser.parse_args()
     

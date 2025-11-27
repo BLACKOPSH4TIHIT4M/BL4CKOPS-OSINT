@@ -1,0 +1,135 @@
+
+> app@0.1.0 dev
+> next dev --turbopack
+
+ ⚠ Port 3000 is in use, using available port 3002 instead.
+   ▲ Next.js 15.3.5 (Turbopack)
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.1.9:3002
+
+ ✓ Starting...
+ ✓ Ready in 1015ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.1s
+ GET / 200 in 3426ms
+ GET / 200 in 179ms
+ GET /?id=c3922e96-2522-4bf2-b6a6-26d7bffe6188&vscodeBrowserReqId=1764196281187 200 in 112ms
+ GET / 200 in 137ms
+ GET / 200 in 238ms
+ GET / 200 in 163ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1479ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.w9poplmifuf'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.w9poplmifuf'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.fbdo82pelec'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.fbdo82pelec'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.xyi7o95i09'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/static/development/_buildManifest.js.tmp.xyi7o95i09'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_document.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/server/require.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/server/load-components.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/build/utils.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/build/swc/options.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/build/swc/index.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/server/config.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/server/next.js
+- /home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/server/pages/_document.js:2:17) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET / 500 in 311ms
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/app/page/app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/h4tihit4m/BL4CKOPS_REVEALED/bl4ckops-osint-gui-customization-main/.next/server/pages/_app/build-manifest.json'
+}
+ GET / 200 in 142ms

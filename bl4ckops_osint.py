@@ -30,7 +30,7 @@ def leeker():
  print(Fore.GREEN +  "[4] : DUMP      | DUMP APIKEYS       | ID: A121 | ACTIVATE      ")
  print(Fore.GREEN +  "[5] : DUMP      | DUMP COOKIES       | ID: A115 | ACTIVATE      ")
  print(Fore.GREEN +  "============================================================\n  ")
- choose = input("[amera] => ")
+ choose = input("[bl4ckops] => ")
  if choose == "1":
  
    print(Fore.GREEN + "\n..:: DUMP EMAIL PASS ::..")
@@ -507,7 +507,7 @@ def section():
     print(Fore.GREEN + "[5] : OTHER     | OTHER SCRAPPING    | ID: A189 | ACTIVATE      ")
     print(Fore.GREEN + "[6] : PASS      | PASS  SCRAPPING    | ID: A102 | ACTIVATE      ")
     print(Fore.GREEN + "============================================================\n  ")
-    choose = input("[amera] => ")
+    choose = input("[bl4ckops] => ")
     if choose == "1":
         files()
     elif choose == "2":
@@ -986,7 +986,7 @@ def manual_tools():
  print(Fore.GREEN +  "[1] : CLASS MODE | REQUESTS METHOD    | ID: A419 | ACTIVATE      ")
  print(Fore.GREEN +  "[2] : OTHER MODE | MODULE METHOD      | ID: A316 | ACTIVATE      ")
  print(Fore.GREEN +  "============================================================\n   ")
- choose = input("[amera] => ")
+ choose = input("[bl4ckops] => ")
  if choose == "1":
     class_mode()
  elif choose == "2":
@@ -1001,7 +1001,7 @@ def auto_tools():
  print(Fore.GREEN +  "[3] : LEEKER    | USER PASS SCRAPPER | ID: A107 | ACTIVATE      ")
  print(Fore.GREEN +  "[4] : PERSON    | PERSON SEARCHER    | ID: A113 | ACTIVATE      ")
  print(Fore.GREEN +  "============================================================\n  ")
- choose = input("[amera] => ")
+ choose = input("[bl4ckops] => ")
  if choose == "1":
     full_scrapper()
  elif choose == "2":
@@ -1033,7 +1033,7 @@ def menu():
  print(Fore.GREEN + "▐███████─▐██████▌─███████▌                                                    ")
  print(Fore.GREEN + "███████▌──▐████▌──▐███████             .: By Anezatra Katedram :.             ")
  print(Fore.GREEN + "                           ")
- print(Fore.GREEN + "         Λ M E R Λ         ")
+ print(Fore.GREEN + "         BL4CKOPS         ")
  print(Fore.GREEN + "                           ")
  print(Fore.WHITE + Back.GREEN + "CHOOSE MODULE" + Style.RESET_ALL)
  print(Fore.GREEN + "\n===========================================================    ")
@@ -1041,7 +1041,7 @@ def menu():
  print(Fore.GREEN +  "[2] : MANUAL    | MANUAL SCRAPPING   | ID: A167 | ACTIVATE      ")
  print(Fore.GREEN +  "[3] : EXIT      | EXIT PROGRAM       | ID: A116 | ACTIVATE      ")
  print(Fore.GREEN +  "============================================================\n  ")
- choose = input("[amera] => ")
+ choose = input("[bl4ckops] => ")
  if choose == "1":
     auto_tools()
  elif choose == "2":
