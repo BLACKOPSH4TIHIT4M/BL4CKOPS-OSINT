@@ -993,7 +993,7 @@ def other_mode():
  print("\n..:: OTHER MODE ::..\n") 
  search = input("[*] Enter dork: ")
  print("\n===============================================================================") 
- for j in search(search, pause=2):
+ for j in search(search, num_results=10, sleep_interval=2):
      print(j)
  print("===============================================================================\n") 
  print("[*] Dork scrapping complated\n")
@@ -1009,42 +1009,42 @@ def person():
  print("\n[*] Search name[1]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_name, pause=2):
+ for j in search(data_name, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  data_surname = "intext: " + name + " " + sur
  print("[*] Search name and surname[2]: " + "[" + name + "]" + "[" + sur + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_surname, pause=2):
+ for j in search(data_surname, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  data_phone = "intext: " + phone
  print("[*] Search phone number[3]: " + "[" + phone + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_phone, pause=2):
+ for j in search(data_phone, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  data_instagram = "site: instagram.com intext: " + name
  print("[*] Search social account [instagram][4]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_instagram, pause=2):
+ for j in search(data_instagram, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  data_facebook = "site: facebook.com intext: " + name
  print("[*] Search social account [facebook][5]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_facebook, pause=2):
+ for j in search(data_facebook, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  data_twitter = "site: twitter.com intext: " + name
  print("[*] Search social account [twitter][6]: " + "[" + name + "]\n")
  loading()
  print("===============================================================================")
- for j in search(data_instagram, pause=2):
+ for j in search(data_instagram, num_results=10, sleep_interval=2):
    print(j)
  print("===============================================================================\n")
  print("[*] Person scrapping complated\n")
